@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provider_class/controllers/theme_mode_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,30 +12,37 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   //YOU WOULD MOVE YOUR VARIABLE INSIDE THE PROVIDER CLASS
   //HERE YOU WILL CREATE YOUR INSTANCE OF THE PROVIDER CLASS
-  Color primaryColor = Colors.orange;
-  Color backgroundColor = Colors.white;
-  var iconFloatingElevationButton = const Icon(Icons.mode_night);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        //THIS VARIABLE WILL CHANGE IT STATE
-        backgroundColor: primaryColor,
-      ),
-      body: Container(
-        //THIS VARIABLE WILL CHANGE IT STATE
-        color: backgroundColor,
-      ),
-      floatingActionButton: FloatingActionButton(
-          //THIS VARIABLE WILL CHANGE IT STATE
-          backgroundColor: primaryColor,
-          //THIS VARIABLE WILL CHANGE IT STATE
-          child: iconFloatingElevationButton,
-          onPressed: () {
-            //HERE YOU WOULD CALL YOUR INSTANCE.YOURFUNCTION
-            // DONT FORGET TO ADD THE IF STATEMENT
-          }),
+    return Consumer<ThemeProvider>(
+      builder: ((context, obj, child){
+        var nowIs = obj.nowIs;
+        return Scaffold(
+          appBar: AppBar(
+            //THIS VARIABLE WILL CHANGE IT STATE
+            backgroundColor: nowIs.primary,
+          ),
+          body: Container(
+            //THIS VARIABLE WILL CHANGE IT STATE
+            color: nowIs.background,
+            child: Center(
+              child: Image.asset(nowIs.image),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            //THIS VARIABLE WILL CHANGE IT STATE
+              backgroundColor: nowIs.primary,
+              //THIS VARIABLE WILL CHANGE IT STATE
+              child: nowIs.icon,
+              onPressed: () {
+                Provider.of<ThemeProvider>(
+                    context,
+                    listen: false)
+                    .switcher();
+              }),
+        );
+      }),
     );
   }
 }
